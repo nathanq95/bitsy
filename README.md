@@ -1,2 +1,2 @@
-# habit-service
-services data to/from habit database
+# bitsy
+A habit forming app
