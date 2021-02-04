@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS habits;
 DROP TABLE IF EXISTS details;
 DROP TABLE IF EXISTS progress;
+DROP TABLE IF EXISTS habits;
 
 CREATE TABLE habits (
     id SERIAL PRIMARY KEY,
@@ -20,10 +20,10 @@ CREATE TABLE details (
     day_5 boolean,
     day_6 boolean,
     day_7 boolean,
-    time_1 time,
-    time_2 time,
-    time_3 time,
-    time_4 time
+    time_1 VARCHAR(7),
+    time_2 VARCHAR(7),
+    time_3 VARCHAR(7),
+    time_4 VARCHAR(7)
 );
 
 CREATE TABLE progress (
