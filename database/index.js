@@ -7,10 +7,10 @@ const client = new Client({
 
 client.connect()
   .then(() => {
-    console.log('Connected to ProgreSQL database!');
+    console.log('Connected to the ProgreSQL database!');
   })
   .catch((err) => {
-    console.error('Error connecting to database: ', err.stack);
+    console.error('Error connecting to the database: ', err.stack);
   });
 
 module.exports = client;
