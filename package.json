@@ -1,0 +1,38 @@
+{
+  "name": "bitsy",
+  "version": "1.0.0",
+  "description": "habit development application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./server/index.js",
+    "build:dev": "webpack --mode=development",
+    "build": "webpack --mode=production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nathanq95/bitsy.git"
+  },
+  "author": "Nathanael Quiocson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nathanq95/bitsy/issues"
+  },
+  "homepage": "https://github.com/nathanq95/bitsy#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-redux": "^7.2.2",
+    "redux": "^4.0.5"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.13",
+    "@babel/core": "^7.12.13",
+    "@babel/preset-env": "^7.12.13",
+    "@babel/preset-react": "^7.12.13",
+    "babel-loader": "^8.2.2",
+    "webpack": "^5.20.1",
+    "webpack-cli": "^4.5.0"
+  }
+}
