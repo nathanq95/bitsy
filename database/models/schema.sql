@@ -4,15 +4,15 @@ DROP TABLE IF EXISTS habits;
 
 CREATE TABLE habits (
     id SERIAL PRIMARY KEY,
-    habit_goal varchar,
     habit_1 VARCHAR(50),
     habit_2 VARCHAR(50),
-    habit_3 VARCHAR(50)
+    habit_3 VARCHAR(50),
+    habit_4 varchar(50)
 );
 
 CREATE TABLE details (
     id SERIAL REFERENCES habits(id),
-    current_habit VARCHAR(50),
+    current_habit SMALLINT DEFAULT 1,
     day_1 boolean,
     day_2 boolean,
     day_3 boolean,
