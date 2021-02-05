@@ -1,13 +1,13 @@
 const express = require('express');
 
-const { addHabit } = require('../../database/methods/habits');
-const { addDetails } = require('../../database/methods/details');
-const { initDetails } = require('../../database/methods/progress');
+const { addHabit, getHabitOverview } = require('../../database/methods/habits');
+const { addDetails, getDetails } = require('../../database/methods/details');
+const { initProgress, getTodaysProgress } = require('../../database/methods/progress');
 
 const router = express.Router();
 
 router.route('/add')
-  .get(async (req, res) => {
+  .post(async (req, res) => {
     try {
       const habitData = {
         goal_habit: req.body.goal_habit,
@@ -31,10 +31,41 @@ router.route('/add')
       };
       await addHabit(habitData);
       await addDetails(detailsData);
-      await initDetails();
-      res.send('OK').status(200);
+      await initProgress();
+      res.send('OK').status(201);
     } catch (err) {
-      res.send('INTERNAL SERVER ERROR: ', err).status(500);
+      res.status(500).send(`INTERNAL SERVER ERROR: ${err}`);
+    }
+  });
+
+router.route('/today')
+  .get(async (req, res) => {
+    try {
+      const date = new Date();
+      const today = date.getDay();
+      const detailsData = await getDetails(today);
+      const progressData = [];
+
+      for(let i = 0; i < detailsData.rows.length; i++) {
+        let data = await getTodaysProgress(detailsData.rows[i].id);
+
+        progressData.push(data.rows[0]);
+      }
+      
+      res.send({progressData: progressData, detailsData: detailsData.rows}).status(200);
+    } catch (err) {
+      res.status(500).send(`INTERNAL SERVER ERROR: ${err}`);
+    }
+  });
+
+router.route('/overview')
+  .get(async (req, res) => {
+    try {
+      const id = req.body.id;
+      const overviewData = await getHabitOverview(id);
+      res.send(overviewData.rows[0]).status(200);
+    } catch (err) {
+      res.status(500).send(`INTERNAL SERVER ERROR: ${err}`);
     }
   });
 

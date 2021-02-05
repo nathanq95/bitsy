@@ -1,7 +1,10 @@
 const client = require('../index');
 
-const initDetails = () => client.query('INSERT INTO progress(completed) VALUES(false)');
+const initProgress = () => client.query('INSERT INTO progress(completed) VALUES(false)');
+
+const getTodaysProgress = (data) => client.query(`SELECT * FROM progress WHERE id = ${data}`);
 
 module.exports = {
-  initDetails,
+  initProgress,
+  getTodaysProgress,
 };
