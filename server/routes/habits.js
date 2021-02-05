@@ -2,7 +2,7 @@ const express = require('express');
 
 const { addHabit, getHabitOverview, getCurrentHabit } = require('../../database/methods/habits');
 const { addDetails, getDetails } = require('../../database/methods/details');
-const { initProgress, getTodaysProgress } = require('../../database/methods/progress');
+const { initProgress, getTodaysProgress, completeHabit } = require('../../database/methods/progress');
 
 const router = express.Router();
 
@@ -65,6 +65,16 @@ router.route('/overview')
       const id = req.body.id;
       const overviewData = await getHabitOverview(id);
       res.send(overviewData.rows[0]).status(200);
+    } catch (err) {
+      res.status(500).send(`INTERNAL SERVER ERROR: ${err}`);
+    }
+  });
+
+router.route('/complete')
+  .patch(async (req, res) => {
+    try {
+      await completeHabit(req.body.id, req.body.completed);
+      res.status(201).send('OK');
     } catch (err) {
       res.status(500).send(`INTERNAL SERVER ERROR: ${err}`);
     }
