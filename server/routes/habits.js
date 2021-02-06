@@ -1,8 +1,8 @@
 const express = require('express');
 
-const { addHabit, getHabitOverview, getCurrentHabit } = require('../../database/methods/habits');
-const { addDetails, getDetails } = require('../../database/methods/details');
-const { initProgress, getTodaysProgress, completeHabit } = require('../../database/methods/progress');
+const { addHabit, getHabitOverview, getCurrentHabit, updateHabit, deleteHabit } = require('../../database/methods/habits');
+const { addDetails, getDetails, updateDetails, updateCurrentHabit, deleteDetails } = require('../../database/methods/details');
+const { initProgress, getTodaysProgress, completeHabit, undoComplete, resetProgress, deleteProgress } = require('../../database/methods/progress');
 
 const router = express.Router();
 
@@ -73,11 +73,56 @@ router.route('/overview')
 router.route('/complete')
   .patch(async (req, res) => {
     try {
-      await completeHabit(req.body.id, req.body.completed);
+      const id = req.body.id;
+      const streak = await completeHabit(id, req.body.completed);
+  
+      if(streak.rows[0].streak > 5) {
+        await updateCurrentHabit(id);
+        await resetProgress(id);
+      }
       res.status(201).send('OK');
     } catch (err) {
       res.status(500).send(`INTERNAL SERVER ERROR: ${err}`);
     }
   });
+
+router.route('/undo')
+  .patch(async (req, res) => {
+    try {
+      await undoComplete(req.body.id);
+      res.status(201).send('OK');
+    } catch (err) {
+      res.status(500).send(`INTERNAL SERVER ERROR: ${err}`);
+    }
+  });
+
+  router.route('/update')
+    .patch(async (req, res) => {
+      try {
+        const data = req.body;
+        if(data.habit_1 || data.habit_2 || data.habit_3 || data.habit_4) {
+          await updateHabit(data);
+        }
+        if(data.time_1 || data.time_2 || data.time_3 || data.time_4 || data.day_1 || data.day_2 || data.day_3 || data.day_4 || data.day_5 || data.day_6 || data.day_7) {
+          await updateDetails(data);
+        }
+        res.status(201).send('OK');
+      } catch (err) {
+        res.status(500).send(`INTERNAL SERVER ERROR: ${err}`);
+      }
+    });
+
+  router.route('/delete')
+    .delete(async (req, res) => {
+      try {
+        const id = req.body.id;
+        await deleteDetails(id);
+        await deleteProgress(id);
+        await deleteHabit(id);
+        res.status(201).send('OK');
+      } catch (err) {
+        res.status(500).send(`INTERNAL SERVER ERROR: ${err}`);
+      }
+    });
 
 module.exports = router;
