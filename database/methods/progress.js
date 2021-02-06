@@ -1,4 +1,3 @@
-const { cli } = require('webpack');
 const client = require('../index');
 
 const initProgress = () => client.query('INSERT INTO progress(completed) VALUES(false)');

@@ -46,14 +46,15 @@ router.route('/today')
       const progressData = [];
       const habitData = [];
 
-      for(let i = 0; i < detailsData.rows.length; i++) {
-        let data = await getTodaysProgress(detailsData.rows[i].id);
-        let data2 = await getCurrentHabit(detailsData.rows[i].id, detailsData.rows[i].current_habit)
+      for (let i = 0; i < detailsData.rows.length; i += 1) {
+        const { id } = detailsData.rows[i];
+        const data = await getTodaysProgress(id);
+        const data2 = await getCurrentHabit(id, detailsData.rows[i].current_habit);
         habitData.push(data2.rows[0]);
         progressData.push(data.rows[0]);
       }
-      
-      res.send({progressData: progressData, detailsData: detailsData.rows, habitData: habitData}).status(200);
+
+      res.send({ progressData, detailsData: detailsData.rows, habitData }).status(200);
     } catch (err) {
       res.status(500).send(`INTERNAL SERVER ERROR: ${err}`);
     }
@@ -62,7 +63,7 @@ router.route('/today')
 router.route('/overview')
   .get(async (req, res) => {
     try {
-      const id = req.body.id;
+      const { id } = req.body;
       const overviewData = await getHabitOverview(id);
       res.send(overviewData.rows[0]).status(200);
     } catch (err) {
@@ -73,10 +74,10 @@ router.route('/overview')
 router.route('/complete')
   .patch(async (req, res) => {
     try {
-      const id = req.body.id;
+      const { id } = req.body;
       const streak = await completeHabit(id, req.body.completed);
-  
-      if(streak.rows[0].streak > 5) {
+
+      if (streak.rows[0].streak > 5) {
         await updateCurrentHabit(id);
         await resetProgress(id);
       }
@@ -89,40 +90,41 @@ router.route('/complete')
 router.route('/undo')
   .patch(async (req, res) => {
     try {
-      await undoComplete(req.body.id);
+      const { id } = req.body;
+      await undoComplete(id);
       res.status(201).send('OK');
     } catch (err) {
       res.status(500).send(`INTERNAL SERVER ERROR: ${err}`);
     }
   });
 
-  router.route('/update')
-    .patch(async (req, res) => {
-      try {
-        const data = req.body;
-        if(data.habit_1 || data.habit_2 || data.habit_3 || data.habit_4) {
-          await updateHabit(data);
-        }
-        if(data.time_1 || data.time_2 || data.time_3 || data.time_4 || data.day_1 || data.day_2 || data.day_3 || data.day_4 || data.day_5 || data.day_6 || data.day_7) {
-          await updateDetails(data);
-        }
-        res.status(201).send('OK');
-      } catch (err) {
-        res.status(500).send(`INTERNAL SERVER ERROR: ${err}`);
+router.route('/update')
+  .patch(async (req, res) => {
+    try {
+      const data = req.body;
+      if (data.habit_1 || data.habit_2 || data.habit_3 || data.habit_4) {
+        await updateHabit(data);
       }
-    });
+      if (data.time_1 || data.time_2 || data.time_3 || data.time_4 || data.day_1 || data.day_2 || data.day_3 || data.day_4 || data.day_5 || data.day_6 || data.day_7) {
+        await updateDetails(data);
+      }
+      res.status(201).send('OK');
+    } catch (err) {
+      res.status(500).send(`INTERNAL SERVER ERROR: ${err}`);
+    }
+  });
 
-  router.route('/delete')
-    .delete(async (req, res) => {
-      try {
-        const id = req.body.id;
-        await deleteDetails(id);
-        await deleteProgress(id);
-        await deleteHabit(id);
-        res.status(201).send('OK');
-      } catch (err) {
-        res.status(500).send(`INTERNAL SERVER ERROR: ${err}`);
-      }
-    });
+router.route('/delete')
+  .delete(async (req, res) => {
+    try {
+      const { id } = req.body;
+      await deleteDetails(id);
+      await deleteProgress(id);
+      await deleteHabit(id);
+      res.status(201).send('OK');
+    } catch (err) {
+      res.status(500).send(`INTERNAL SERVER ERROR: ${err}`);
+    }
+  });
 
 module.exports = router;
