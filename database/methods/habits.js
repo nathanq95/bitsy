@@ -6,7 +6,7 @@ const getHabitOverview = (id) => client.query(`SELECT habit_1, habit_2, habit_3,
 
 const getCurrentHabit = (id, data) => client.query(`SELECT id, habit_${data} FROM habits WHERE id = ${id} `);
 
-const updateHabit = (data) => {
+const updateHabit = (id, data) => {
   let updateData = '';
 
   if (data.habit_1) {
@@ -31,7 +31,7 @@ const updateHabit = (data) => {
     updateData += ` habit_4 = '${data.habit_4}' `;
   }
 
-  return client.query(`UPDATE habits SET ${updateData} WHERE id = ${data.id}`);
+  return client.query(`UPDATE habits SET ${updateData} WHERE id = ${id}`);
 };
 
 const deleteHabit = (id) => client.query(`DELETE FROM habits WHERE id = ${id}`);

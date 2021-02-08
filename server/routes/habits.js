@@ -16,13 +16,13 @@ router.route('/add')
         habit_4: req.body.habit_4,
       };
       const detailsData = {
+        day_0: req.body.day_0,
         day_1: req.body.day_1,
         day_2: req.body.day_2,
         day_3: req.body.day_3,
         day_4: req.body.day_4,
         day_5: req.body.day_5,
         day_6: req.body.day_6,
-        day_7: req.body.day_7,
         time_1: req.body.time_1,
         time_2: req.body.time_2,
         time_3: req.body.time_3,
@@ -103,7 +103,7 @@ router.route('/update')
     try {
       const data = req.body;
       if (data.habit_1 || data.habit_2 || data.habit_3 || data.habit_4) {
-        await updateHabit(data);
+        await updateHabit(data.id, data);
       }
       if (data.time_1 || data.time_2 || data.time_3 || data.time_4 || data.day_1 || data.day_2 || data.day_3 || data.day_4 || data.day_5 || data.day_6 || data.day_7) {
         await updateDetails(data);
