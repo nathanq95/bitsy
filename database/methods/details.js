@@ -1,6 +1,6 @@
 const client = require('../index');
 
-const addDetails = (data) => client.query(`INSERT INTO details(day_1, day_2, day_3, day_4, day_5, day_6, day_7, time_1, time_2, time_3, time_4) VALUES ('${data.day_1}', '${data.day_2}', '${data.day_3}', '${data.day_4}', '${data.day_5}', '${data.day_6}', '${data.day_7}', '${data.time_1}', '${data.time_2}', '${data.time_3}', '${data.time_4}')`);
+const addDetails = (data) => client.query(`INSERT INTO details(day_0, day_1, day_2, day_3, day_4, day_5, day_6, time_1, time_2, time_3, time_4) VALUES ('${data.day_0}', '${data.day_1}', '${data.day_2}', '${data.day_3}', '${data.day_4}', '${data.day_5}', '${data.day_6}', '${data.time_1}', '${data.time_2}', '${data.time_3}', '${data.time_4}')`);
 
 const getDetails = (data) => client.query(`SELECT id, current_habit, time_1, time_2, time_3, time_4 FROM details WHERE day_${data} = true`);
 
@@ -27,6 +27,12 @@ const updateDetails = (data) => {
       updateData += ',';
     }
     updateData += ` time_4 = '${data.time_4}' `;
+  }
+  if (data.day_0) {
+    if (updateData.length > 0) {
+      updateData += ',';
+    }
+    updateData += ` day_0 = ${data.day_0} `;
   }
   if (data.day_1) {
     if (updateData.length > 0) {
@@ -63,12 +69,6 @@ const updateDetails = (data) => {
       updateData += ',';
     }
     updateData += ` day_6 = ${data.day_6} `;
-  }
-  if (data.day_7) {
-    if (updateData.length > 0) {
-      updateData += ',';
-    }
-    updateData += ` day_7 = ${data.day_7} `;
   }
 
   return client.query(`UPDATE details SET ${updateData} WHERE id = ${data.id}`);
