@@ -2,8 +2,13 @@ const client = require('../../database/index');
 const { expect } = require('chai');
 const { addHabit, getHabitOverview, getCurrentHabit, updateHabit, deleteHabit } = require('../../database/methods/habits');
 
-describe ('Habit table methods', () => {
-  beforeAll( async () => {
+describe ('habits table methods', () => {
+  beforeAll ( async () => {
+    await client.query('DELETE FROM habits WHERE id >= 0');
+    await client.query('ALTER SEQUENCE habits_id_seq RESTART WITH 1')
+  });
+
+  afterAll (async () => {
     await client.query('DELETE FROM habits WHERE id >= 0');
     await client.query('ALTER SEQUENCE habits_id_seq RESTART WITH 1')
   });
