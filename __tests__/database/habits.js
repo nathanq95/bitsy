@@ -95,11 +95,10 @@ describe ('habits table methods', () => {
 
       await deleteHabit(id);
       actual = await client.query(`SELECT * FROM habits WHERE id = ${id}`);
-      actualData = actual.rows[0];
+      actualData = actual.rows;
       
-      expect(actualData).to.equal(undefined);
+      expect(actualData.length).to.equal(0);
       done();
     });
   });
-    
 });
