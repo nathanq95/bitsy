@@ -1,7 +1,7 @@
 const express = require('express');
 
 const { addHabit, getHabitOverview, getCurrentHabit, updateHabit, deleteHabit } = require('../../database/methods/habits');
-const { addDetails, getDetails, updateDetails, updateCurrentHabit, deleteDetails } = require('../../database/methods/details');
+const { addDetails, getDetails, updateDetails, incrementCurrentHabit, deleteDetails } = require('../../database/methods/details');
 const { initProgress, getTodaysProgress, completeHabit, undoComplete, resetProgress, deleteProgress } = require('../../database/methods/progress');
 
 const router = express.Router();
@@ -78,7 +78,7 @@ router.route('/complete')
       const streak = await completeHabit(id, req.body.completed);
 
       if (streak.rows[0].streak > 5) {
-        await updateCurrentHabit(id);
+        await incrementCurrentHabit(id);
         await resetProgress(id);
       }
       res.status(201).send('OK');
