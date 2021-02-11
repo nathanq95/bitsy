@@ -1,4 +1,4 @@
-const checkReqBody = (req, res, next) => {
+const checkData = (req, res, next) => {
   const data = req.body;
   const timeFormat = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
 
@@ -19,4 +19,4 @@ const checkReqBody = (req, res, next) => {
   }
   next();
 };
-module.exports = checkReqBody;
+module.exports = checkData;

@@ -36,7 +36,8 @@ router.route('/add')
       await progress.init();
       res.status(201).send('OK');
     } catch (err) {
-      res.status(500).send(`INTERNAL SERVER ERROR: ${err}`);
+      console.error(err);
+      res.status(500).send('INTERNAL SERVER ERROR');
     }
   });
 
@@ -59,7 +60,8 @@ router.route('/today')
 
       res.send({ progressData, detailsData: detailsData.rows, habitData }).status(200);
     } catch (err) {
-      res.status(500).send(`INTERNAL SERVER ERROR: ${err}`);
+      console.error(err);
+      res.status(500).send('INTERNAL SERVER ERROR');
     }
   });
 
@@ -68,9 +70,11 @@ router.route('/overview')
     try {
       const { id } = req.body;
       const overviewData = await habits.getOverview(id);
-      res.send(overviewData.rows[0]).status(200);
+      if (!overviewData.rows[0]) res.status(204).send('NO CONTENT');
+      res.status(200).send(overviewData.rows[0]);
     } catch (err) {
-      res.status(500).send(`INTERNAL SERVER ERROR: ${err}`);
+      console.error(err);
+      res.status(500).send('INTERNAL SERVER ERROR');
     }
   });
 
@@ -86,7 +90,8 @@ router.route('/complete')
       }
       res.status(201).send('OK');
     } catch (err) {
-      res.status(500).send(`INTERNAL SERVER ERROR: ${err}`);
+      console.error(err);
+      res.status(500).send('INTERNAL SERVER ERROR');
     }
   });
 
@@ -97,23 +102,27 @@ router.route('/undo')
       await progress.undoComplete(id);
       res.status(201).send('OK');
     } catch (err) {
-      res.status(500).send(`INTERNAL SERVER ERROR: ${err}`);
+      console.error(err);
+      res.status(500).send('INTERNAL SERVER ERROR');
     }
   });
 
 router.route('/update')
   .patch(async (req, res) => {
     try {
+      const id = req.body.id;
       const data = req.body;
+      console.log(data);
       if (data.habit_1 || data.habit_2 || data.habit_3 || data.habit_4) {
         await habits.update(data.id, data);
       }
       if (data.time_1 || data.time_2 || data.time_3 || data.time_4 || data.day_1 || data.day_2 || data.day_3 || data.day_4 || data.day_5 || data.day_6 || data.day_7) {
-        await details.update(data);
+        await details.update(id, data);
       }
       res.status(201).send('OK');
     } catch (err) {
-      res.status(500).send(`INTERNAL SERVER ERROR: ${err}`);
+      console.error(err);
+      res.status(500).send('INTERNAL SERVER ERROR');
     }
   });
 
@@ -126,7 +135,8 @@ router.route('/delete')
       await habits.delete(id);
       res.status(201).send('OK');
     } catch (err) {
-      res.status(500).send(`INTERNAL SERVER ERROR: ${err}`);
+      console.error(err);
+      res.status(500).send('INTERNAL SERVER ERROR');
     }
   });
 
