@@ -1,11 +1,5 @@
 const { Client } = require('pg');
-let database;
-
-if (!process.env.TEST) {
-  database = 'habits';
-} else {
-  database = process.env.TEST;
-}
+const database = process.env.DATABASE;
 
 const client = new Client({
   database: database,
