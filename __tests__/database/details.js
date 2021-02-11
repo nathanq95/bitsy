@@ -1,29 +1,11 @@
-const client = require('../../database/index');
 const { expect } = require('chai');
-const { addDetails, getDetails, updateDetails, incrementCurrentHabit, deleteDetails} = require('../../database/methods/details');
+const Details = require('../../database/methods/details');
 
 describe ('details table methods', () => {
-  beforeAll ( async () => {
-    const data = {
-        habit_1: 'a',
-        habit_2: 'b',
-        habit_3: 'c',
-        habit_4: 'd'
-    };
-    await client.query('DELETE FROM habits WHERE id >= 0');
-    await client.query('ALTER SEQUENCE habits_id_seq RESTART WITH 1')
-    return client.query(`INSERT INTO habits(habit_1, habit_2, habit_3, habit_4) VALUES('${data.habit_1}', '${data.habit_2}', '${data.habit_3}', '${data.habit_4}')`)
-  });
+  const details = new Details();
 
-  afterAll (async () => {
-    await client.query('DELETE FROM details WHERE id >= 0');
-    await client.query('DELETE FROM habits WHERE id >= 0');
-    await client.query('ALTER SEQUENCE details_id_seq RESTART WITH 1');
-    await client.query('ALTER SEQUENCE habits_id_seq RESTART WITH 1');
-  });
-
-  describe('addDetails', () => {
-    it ('should write details to the details table', async (done) => {
+  describe('add', () => {
+    it ('should insert into the details table', async (done) => {
       const data = {
         day_0: true,
         day_1: true,
@@ -37,88 +19,53 @@ describe ('details table methods', () => {
         time_3: '18:00',
         time_4: '19:00'
       };
-      let actual, actualData;
+      const addDetailsTest = await details.add(data);
 
-      await addDetails(data);
-      actual = await client.query('SELECT * FROM details WHERE id = 1');
-      actualData = actual.rows[0];
-
-      expect(data.day_0).to.equal(actualData.day_0);
-      expect(data.day_1).to.equal(actualData.day_1);
-      expect(data.day_2).to.equal(actualData.day_2);
-      expect(data.day_3).to.equal(actualData.day_3);
-      expect(data.day_4).to.equal(actualData.day_4);
-      expect(data.day_5).to.equal(actualData.day_5);
-      expect(data.day_6).to.equal(actualData.day_6);
-      expect(data.time_1).to.equal(actualData.time_1);
-      expect(data.time_2).to.equal(actualData.time_2);
-      expect(data.time_3).to.equal(actualData.time_3);
-      expect(data.time_4).to.equal(actualData.time_4);
+      expect(addDetailsTest).to.equal("INSERT INTO details(day_0, day_1, day_2, day_3, day_4, day_5, day_6, time_1, time_2, time_3, time_4) VALUES ('true', 'true', 'true', 'true', 'true', 'true', 'true', '16:00', '17:00', '18:00', '19:00')");
       done();
     });
   });
 
-  describe ('getDetails', () => {
-    it ('should return details from the details table', async (done) => {
+  describe ('get', () => {
+    it ('should return data', async (done) => {
       const day = 1;
-      const test = await getDetails(day);
-      const testData = test.rows[0];
-      const actual = await client.query('SELECT * FROM details WHERE id = 1');
-      const actualData = actual.rows[0];
+      const getDetailsTest = await details.get(day);
 
-      expect(testData.current_habit).to.equal(actualData.current_habit);
-      expect(testData.time_1).to.equal(actualData.time_1);
-      expect(testData.time_2).to.equal(actualData.time_2);
-      expect(testData.time_3).to.equal(actualData.time_3);
-      expect(testData.time_4).to.equal(actualData.time_4);
+      expect(getDetailsTest).to.equal('SELECT id, current_habit, time_1, time_2, time_3, time_4 FROM details WHERE day_1 = true');
       done();
     });
   });
 
-  describe ('updateDetails', () => {
-    it ('should update the details table', async (done) => {
+  describe ('update', () => {
+    it ('should update values', async (done) => {
       const id = 1;
       const data = {
         time_1: '12:00',
         day_0: false
       };
-      let actual, actualData;
+      const updateTest = await details.update(id, data);
 
-      await updateDetails(id, data);
-      actual = await client.query('SELECT * FROM details WHERE id = 1');
-      actualData = actual.rows[0];
-
-      expect(data.time_1).to.equal(actualData.time_1);
-      expect(data.day_0).to.equal(actualData.day_0);
+      expect(updateTest).to.equal("UPDATE details SET  time_1 = '12:00' , day_0 = false  WHERE id = 1");
       done();
     });
   });
 
-  describe ('incrementCurrentHabit', () => {
-    it ('should change the current habit in the details table', async (done) => {
+  describe ('updateCurrent', () => {
+    it ('should update the current habit', async (done) => {
       const id = 1;
-      const testData = 2;
-      let actual, actualData;
+      const incrementtest = await details.updateCurrent(id);
 
-      await incrementCurrentHabit(id)
-      actual = await client.query('SELECT current_habit FROM details WHERE id = 1');
-      actualData = actual.rows[0];
-
-      expect(testData).to.equal(actualData.current_habit);
+      expect(incrementtest).to.equal('UPDATE details SET current_habit = current_habit + 1 WHERE id = 1');
       done();
     });
   });
 
-  describe ('deleteDetails', () => {
-    it ('should delete details from the details table', async (done) => {
-      let actual, actualData;
+  describe ('delete', () => {
+    it ('should delete data from the details table', async (done) => {
       const id = 1;
+      const deleteTest = await details.delete(id);
 
-      await deleteDetails(id);
-      actual = await client.query('SELECT * FROM details WHERE id = 1');
-      actualData = actual.rows;
-
-      expect(actualData.length).to.equal(0);
+      expect(deleteTest).to.equal('DELETE FROM details WHERE id = 1');
       done();
     });
   });

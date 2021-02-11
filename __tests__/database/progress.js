@@ -1,121 +1,64 @@
-const client = require('../../database/index');
 const { expect } = require('chai');
-const { initProgress, getProgress, completeProgress, undoComplete, resetProgress, deleteProgress} = require('../../database/methods/progress');
+const Progress = require('../../database/methods/progress');
 
 describe ('progress table methods', () => {
-  beforeAll ( async () => {
-    const data = {
-      habit_1: 'a',
-      habit_2: 'b',
-      habit_3: 'c',
-      habit_4: 'd'
-    };
-    await client.query('DELETE FROM habits WHERE id >= 0');
-    await client.query('ALTER SEQUENCE habits_id_seq RESTART WITH 1')
-    return client.query(`INSERT INTO habits(habit_1, habit_2, habit_3, habit_4) VALUES('${data.habit_1}', '${data.habit_2}', '${data.habit_3}', '${data.habit_4}')`)
-  });
+  const progress = new Progress();
 
-  afterAll (async () => {
-    await client.query('DELETE FROM progress WHERE id >= 0');
-    await client.query('DELETE FROM habits WHERE id >= 0');
-    await client.query('ALTER SEQUENCE progress_id_seq RESTART WITH 1');
-    await client.query('ALTER SEQUENCE habits_id_seq RESTART WITH 1');
-  });
-
-  describe ('initProgress', () => {
+  describe ('init', () => {
     it ('should generate initial data in the progress table', async (done) => {
-      let actual, actualData;
-      const expectedData = {
-        id: 1,
-        completed: false,
-        streak: 0
-      }
+      const initProgressTest = await progress.init();
 
-      await initProgress();
-      actual = await client.query('SELECT * FROM progress WHERE id = 1');
-      actualData = actual.rows[0];
-
-      expect(actualData.id).to.equal(expectedData.id);
-      expect(actualData.completed).to.equal(expectedData.completed);
-      expect(actualData.streak).to.equal(expectedData.streak);
+      expect(initProgressTest).to.equal('INSERT INTO progress(completed) VALUES(false)');
       done();
     });
   });
 
-  describe ('getTodaysProgress', () => {
+  describe ('get', () => {
     it ('should return all data', async (done) => {
-      let actual, actualData;
       const id = 1;
-      const expectedData = {
-        id: 1,
-        completed: false,
-        streak: 0
-      }
+      const getProgressTest = await progress.get(id);
 
-      await getProgress(id);
-      actual = await client.query('SELECT * FROM progress WHERE id = 1');
-      actualData = actual.rows[0];
-
-      expect(actualData.id).to.equal(expectedData.id);
-      expect(actualData.completed).to.equal(expectedData.completed);
-      expect(actualData.streak).to.equal(expectedData.streak);
+      expect(getProgressTest).to.equal('SELECT * FROM progress WHERE id = 1');
       done();
     });
   });
 
-  describe ('completeProgress', () => {
+  describe ('complete', () => {
     it ('should set the completed column to true', async (done) => {
-      let actual, actualData;
       const id = 1;
+      const completeProgressTest = await progress.complete(id);
 
-      await completeProgress(id);
-      actual = await client.query('SELECT completed FROM progress WHERE id = 1');
-      actualData = actual.rows[0];
-
-      expect(actualData.completed).to.equal(true);
+      expect(completeProgressTest).to.equal('UPDATE progress SET completed = true, streak = streak + 1 WHERE id = 1 RETURNING streak');
       done();
     });
   });
 
   describe ('undoComplete', () => {
     it ('should set the completed column to false', async (done) => {
-      let actual, actualData;
       const id = 1;
+      const undoCompleteTest = await progress.undoComplete(id);
 
-      await undoComplete(id);
-      actual = await client.query('SELECT completed FROM progress WHERE id = 1');
-      actualData = actual.rows[0];
-
-      expect(actualData.completed).to.equal(false);
+      expect(undoCompleteTest).to.equal('UPDATE progress SET completed = false, streak = streak - 1 WHERE id = 1');
       done();
     });
   });
 
-  describe ('resetProgress', () => {
+  describe ('reset', () => {
     it ('should reset the completed & streak columns to their initial values', async (done) => {
-      let actual, actualData;
       const id = 1;
+      const resetProgressTest = await progress.reset(id);
 
-      await resetProgress(id);
-      actual = await client.query('SELECT completed, streak FROM progress WHERE id = 1');
-      actualData = actual.rows[0];
-
-      expect(actualData.completed).to.equal(false);
-      expect(actualData.streak).to.equal(0);
+      expect(resetProgressTest).to.equal('UPDATE progress SET completed = false, streak = 0 WHERE id = 1');
       done();
     });
   });
   
-  describe ('deleteProgress', () => {
+  describe ('delete', () => {
     it ('should delete data from the progress table', async (done) => {
-      let actual, actualData;
       const id = 1;
-      
-      await deleteProgress(id);
-      actual = await client.query('SELECT * FROM progress WHERE id = 1');
-      actualData = actual.rows;
+      const deleteProgressTest = await progress.delete(id);
 
-      expect(actualData.length).to.equal(0);
+      expect(deleteProgressTest).to.equal('DELETE FROM progress WHERE id = 1');
       done();
     });
   });
