@@ -34,7 +34,7 @@ router.route('/add')
       await habits.add(habitData)
       await details.add(detailsData);
       await progress.init();
-      res.send('OK').status(201);
+      res.status(201).send('OK');
     } catch (err) {
       res.status(500).send(`INTERNAL SERVER ERROR: ${err}`);
     }
