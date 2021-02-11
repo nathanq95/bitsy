@@ -1,103 +1,67 @@
-const client = require('../../database/index');
 const { expect } = require('chai');
-const { addHabit, getHabitOverview, getCurrentHabit, updateHabit, deleteHabit } = require('../../database/methods/habits');
+const Habits = require('../../database/methods/habits');
 
 describe ('habits table methods', () => {
-  beforeAll ( async () => {
-    await client.query('DELETE FROM habits WHERE id >= 0');
-    await client.query('ALTER SEQUENCE habits_id_seq RESTART WITH 1')
-  });
+  const habits = new Habits();
 
-  afterAll (async () => {
-    await client.query('DELETE FROM habits WHERE id >= 0');
-    await client.query('ALTER SEQUENCE habits_id_seq RESTART WITH 1')
-  });
-
-  describe ('addHabit', () => {
+  describe ('add', () => {
     it ('should write to the habits table', async (done) => {
       const data = {
       habit_1: 'a',
       habit_2: 'b',
       habit_3: 'c',
       habit_4: 'd'
-    };
+     };
+    const addHabitTest  = await habits.add(data);
 
-    await addHabit(data);
-    const result = await client.query('SELECT * FROM habits WHERE id = 1');
-    const resultData = result.rows[0];
-
-    expect(resultData.habit_1).to.equal(data.habit_1);
-    expect(resultData.habit_2).to.equal(data.habit_2);
-    expect(resultData.habit_3).to.equal(data.habit_3);
-    expect(resultData.habit_4).to.equal(data.habit_4);
+    expect(addHabitTest).to.equal("INSERT INTO habits(habit_1, habit_2, habit_3, habit_4) VALUES('a', 'b', 'c', 'd')");
     done();
     });
   });
 
-  describe ('getHabitOverview', () => {
-    it ('should return all four habits from the habits table', async (done) => {
+  describe ('get', () => {
+    it ('should return all four habits', async (done) => {
       const id = 1;
-      const test = await getHabitOverview(id);
-      const testData = test.rows[0];
-      const actual = await client.query(`SELECT * FROM habits WHERE id = 1`);
-      const actualData = actual.rows[0];
+      const getOverviewTest = await habits.getOverview(id);
 
-      expect(testData.habit_1).to.equal(actualData.habit_1);
-      expect(testData.habit_2).to.equal(actualData.habit_2);
-      expect(testData.habit_3).to.equal(actualData.habit_3);
-      expect(testData.habit_4).to.equal(actualData.habit_4);
+      expect(getOverviewTest).to.equal('SELECT habit_1, habit_2, habit_3, habit_4 FROM habits WHERE id = 1');
       done();
     });
   });
 
-  describe ('getCurrentHabit', () => {
-    it ('should return a habit from the habits table', async (done) => {
+  describe ('getCurrent', () => {
+    it ('should return a habit', async (done) => {
       const id = 1;
       const habit = 2;
-      const result = await getCurrentHabit(id, habit);
-      const resultData = result.rows[0];
-      const actual = await client.query(`SELECT habit_${habit} FROM habits WHERE id = ${id}`);
-      const actualData = actual.rows[0];
+      const getCurrentHabitTest = await habits.getCurrent(id, habit);
 
-      expect(resultData[`habit_${habit}`]).to.equal(actualData[`habit_${habit}`]);
+      expect(getCurrentHabitTest).to.equal('SELECT id, habit_2 FROM habits WHERE id = 1');
       done();
     });
   });
 
-  describe ('updateHabit', () => {
-    it ('should update values on the habit table', async (done) => {
+  describe ('update', () => {
+    it ('should update values', async (done) => {
       const id = 1;
       const data = {
         habit_1: 'e',
         habit_2: 'f',
         habit_3: 'g',
-        habit_4: 'j'
+        habit_4: 'h'
       };
-      let actual;
-      let actualData;
-      await updateHabit(id, data);
+      const updateHabitTest = await habits.update(id, data);
 
-      actual = await client.query(`SELECT * FROM habits WHERE id = 1`);
-      actualData = actual.rows[0];
-      expect(data.habit_1).to.equal(actualData.habit_1);
-      expect(data.habit_2).to.equal(actualData.habit_2);
-      expect(data.habit_3).to.equal(actualData.habit_3);
-      expect(data.habit_4).to.equal(actualData.habit_4);
+      expect(updateHabitTest).to.equal("UPDATE habits SET  habit_1 = 'e' , habit_2 = 'f' , habit_3 = 'g' , habit_4 = 'h'  WHERE id = 1");
       done();
     });
   });
   
-  describe ('deletehabit', () => {
-    it ('should delete a habit from the habits table', async (done) => {
+  describe ('delete', () => {
+    it ('should delete data from the habits table', async (done) => {
       const id = 1;
-      let actual;
-      let actualData;
+      const deleteTest = await habits.delete(id);
 
-      await deleteHabit(id);
-      actual = await client.query(`SELECT * FROM habits WHERE id = ${id}`);
-      actualData = actual.rows;
-      
-      expect(actualData.length).to.equal(0);
+      expect(deleteTest).to.equal('DELETE FROM habits WHERE id = 1');
       done();
     });
   });
