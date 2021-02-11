@@ -11,6 +11,7 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/', express.static(path.join(__dirname, '../client/dist')));
+app.use('/api/add', require('./middleware/checkReqBody'));
 app.use('/api', require('./routes/habits.js'));
 
 app.get('*', (req, res) => {
