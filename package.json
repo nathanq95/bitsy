@@ -4,11 +4,12 @@
   "description": "habit development application",
   "main": "index.js",
   "scripts": {
+    "start:dev": "DATABASE=habits_dev node ./server/index.js",
     "start": "node ./server/index.js",
     "build:dev": "webpack --mode=development",
     "build": "webpack --mode=production",
     "lint": "./node_modules/.bin/eslint",
-    "test": "TEST='habits_test' jest --forceExit",
+    "test": "jest",
     "test:watch": "jest --watch"
   },
   "repository": {
