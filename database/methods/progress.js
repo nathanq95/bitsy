@@ -1,22 +1,29 @@
 const client = require('../index');
 
-const initProgress = () => client.query('INSERT INTO progress(completed) VALUES(false)');
+class Progress {
+  init() {
+    return client.query('INSERT INTO progress(completed) VALUES(false)');
+  }
 
-const getProgress = (data) => client.query(`SELECT * FROM progress WHERE id = ${data}`);
+  get(data) {
+    return client.query(`SELECT * FROM progress WHERE id = ${data}`);
+  }
 
-const completeProgress = (id) => client.query(`UPDATE progress SET completed = true, streak = streak + 1 WHERE id = ${id} RETURNING streak`);
+  complete(id) {
+    return client.query(`UPDATE progress SET completed = true, streak = streak + 1 WHERE id = ${id} RETURNING streak`);
+  }
 
-const undoComplete = (id) => client.query(`UPDATE progress SET completed = false, streak = streak - 1 WHERE id = ${id}`);
+  undoComplete(id) {
+    return client.query(`UPDATE progress SET completed = false, streak = streak - 1 WHERE id = ${id}`);
+  }
 
-const resetProgress = (id) => client.query(`UPDATE progress SET completed = false, streak = 0 WHERE id = ${id}`);
+  reset(id) {
+    return client.query(`UPDATE progress SET completed = false, streak = 0 WHERE id = ${id}`);
+  }
 
-const deleteProgress = (id) => client.query(`DELETE FROM progress WHERE id = ${id}`);
+  delete(id) {
+    return client.query(`DELETE FROM progress WHERE id = ${id}`);
+  }
+}
 
-module.exports = {
-  initProgress,
-  getProgress,
-  completeProgress,
-  undoComplete,
-  resetProgress,
-  deleteProgress,
-};
+module.exports = Progress;

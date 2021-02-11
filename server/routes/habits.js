@@ -1,10 +1,13 @@
 const express = require('express');
 
-const { addHabit, getHabitOverview, getCurrentHabit, updateHabit, deleteHabit } = require('../../database/methods/habits');
-const { addDetails, getDetails, updateDetails, incrementCurrentHabit, deleteDetails } = require('../../database/methods/details');
-const { initProgress, getProgress, completeProgress, undoComplete, resetProgress, deleteProgress } = require('../../database/methods/progress');
+const Habits = require('../../database/methods/habits');
+const Details = require('../../database/methods/details');
+const Progress = require('../../database/methods/progress');
 
 const router = express.Router();
+const habits = new Habits();
+const progress = new Progress();
+const details = new Details();
 
 router.route('/add')
   .post(async (req, res) => {
@@ -28,9 +31,9 @@ router.route('/add')
         time_3: req.body.time_3,
         time_4: req.body.time_4,
       };
-      await addHabit(habitData);
-      await addDetails(detailsData);
-      await initProgress();
+      await habits.add(habitData)
+      await details.add(detailsData);
+      await progress.init();
       res.send('OK').status(201);
     } catch (err) {
       res.status(500).send(`INTERNAL SERVER ERROR: ${err}`);
@@ -42,14 +45,14 @@ router.route('/today')
     try {
       const date = new Date();
       const today = date.getDay();
-      const detailsData = await getDetails(today);
+      const detailsData = await details.get(today);
       const progressData = [];
       const habitData = [];
 
       for (let i = 0; i < detailsData.rows.length; i += 1) {
         const { id } = detailsData.rows[i];
-        const data = await getProgress(id);
-        const data2 = await getCurrentHabit(id, detailsData.rows[i].current_habit);
+        const data = await progress.get(id);
+        const data2 = await habits.getCurrent(id, detailsData.rows[i].current_habit);
         habitData.push(data2.rows[0]);
         progressData.push(data.rows[0]);
       }
@@ -64,7 +67,7 @@ router.route('/overview')
   .get(async (req, res) => {
     try {
       const { id } = req.body;
-      const overviewData = await getHabitOverview(id);
+      const overviewData = await habits.getOverview(id);
       res.send(overviewData.rows[0]).status(200);
     } catch (err) {
       res.status(500).send(`INTERNAL SERVER ERROR: ${err}`);
@@ -75,11 +78,11 @@ router.route('/complete')
   .patch(async (req, res) => {
     try {
       const { id } = req.body;
-      const streak = await completeProgress(id);
+      const streak = await progress.complete(id);
 
       if (streak.rows[0].streak > 5) {
-        await incrementCurrentHabit(id);
-        await resetProgress(id);
+        await details.updateCurrent(id);
+        await progress.reset(id);
       }
       res.status(201).send('OK');
     } catch (err) {
@@ -91,7 +94,7 @@ router.route('/undo')
   .patch(async (req, res) => {
     try {
       const { id } = req.body;
-      await undoComplete(id);
+      await progress.undoComplete(id);
       res.status(201).send('OK');
     } catch (err) {
       res.status(500).send(`INTERNAL SERVER ERROR: ${err}`);
@@ -103,10 +106,10 @@ router.route('/update')
     try {
       const data = req.body;
       if (data.habit_1 || data.habit_2 || data.habit_3 || data.habit_4) {
-        await updateHabit(data.id, data);
+        await habits.update(data.id, data);
       }
       if (data.time_1 || data.time_2 || data.time_3 || data.time_4 || data.day_1 || data.day_2 || data.day_3 || data.day_4 || data.day_5 || data.day_6 || data.day_7) {
-        await updateDetails(data);
+        await details.update(data);
       }
       res.status(201).send('OK');
     } catch (err) {
@@ -118,9 +121,9 @@ router.route('/delete')
   .delete(async (req, res) => {
     try {
       const { id } = req.body;
-      await deleteDetails(id);
-      await deleteProgress(id);
-      await deleteHabit(id);
+      await details.delete(id);
+      await progress.delete(id);
+      await habits.delete(id);
       res.status(201).send('OK');
     } catch (err) {
       res.status(500).send(`INTERNAL SERVER ERROR: ${err}`);
