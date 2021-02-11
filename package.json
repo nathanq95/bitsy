@@ -4,7 +4,7 @@
   "description": "habit development application",
   "main": "index.js",
   "scripts": {
-    "start:dev": "DATABASE=habits_dev node ./server/index.js",
+    "start:dev": "DATABASE=habits_dev PORT=3000 node ./server/index.js",
     "start": "node ./server/index.js",
     "build:dev": "webpack --mode=development",
     "build": "webpack --mode=production",
