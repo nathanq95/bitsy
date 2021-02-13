@@ -1,4 +1,3 @@
-const { expect } = require('chai');
 const Details = require('../../database/methods/details');
 
 describe ('details table methods', () => {
