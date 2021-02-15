@@ -48,4 +48,22 @@
     - /api/delete
         - Deletes all entries related to a given habit
         - Request body must contain the id of the habit
+        
+#### Currently Developed using...
+- Node v10.15.3
+- npm v6.4.1
+- PostgreSQL v13.1
+- Memcached v1.6.9
 
+### Dependencies
+- Express
+- React
+- node-postgres
+- memcached
+
+### Development Dependencies
+- Webpack/babel
+- Jest/chai/Supertest
+- ESLint w/ Airbrb Style Guide
+
+Refer to package.json file in the root directory for dependency version numbers.
