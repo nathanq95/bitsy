@@ -24,7 +24,8 @@
 - POST
     - /api/add
         - Creates new entries in the habits, progress, & details table using the data provided in the request body.  
-        - Request body must contain: habit_1, habit_2, habit_3, habit_4, day_0, day_1, day_2, day_3, day_4, day_5, day_6, time_1, time_2, time_3, time_4
+        - Request body must contain habit_1, habit_2, habit_3, habit_4, day_0, day_1, day_2, day_3, day_4, day_5, day_6, time_1, time_2, time_3, time_4
+            - Data types: string, string, string, string, boolean, boolean, boolean, boolean, boolean, boolean, boolean, string, string, string, string
 
 - GET
     - /api/today
