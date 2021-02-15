@@ -5,8 +5,6 @@
 
 1. [Requirements](#requirements)
 1. [Usage](#usage)
-1. [API](#api)
-1. [Development](#development)
 
 ## Requirements
 
