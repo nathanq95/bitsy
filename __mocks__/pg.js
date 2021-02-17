@@ -8,7 +8,11 @@ class Client{
   }
 
   query(str) {
-    return str;
+    if (str.includes('undefined')) {
+      throw new Error();
+    } else {
+      return str;
+    }
   }
 }
 
