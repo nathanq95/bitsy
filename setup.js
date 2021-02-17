@@ -1,16 +1,16 @@
 const chai = require('chai')
 
-const originalNot = Object.getOwnPropertyDescriptor(chai.Assertion.prototype, 'not').get
+const originalNot = Object.getOwnPropertyDescriptor(chai.Assertion.prototype, 'not').get;
 Object.defineProperty(chai.Assertion.prototype, 'not', {
   get() {
-    Object.assign(this, this.assignedNot)
-    return originalNot.apply(this)
+    Object.assign(this, this.assignedNot);
+    return originalNot.apply(this);
   },
   set(newNot) {
-    this.assignedNot = newNot
-    return newNot
+    this.assignedNot = newNot;
+    return newNot;
   },
-})
+});
 
 const originalExpect = global.expect
 

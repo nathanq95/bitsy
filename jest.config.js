@@ -9,5 +9,5 @@ module.exports = {
       },
       verbose: true,
   setupFiles: ['./database/index.js'],
-  setupFilesAfterEnv: ['./test-framework-config.js'],
+  setupFilesAfterEnv: ['./setup.js'],
 };
