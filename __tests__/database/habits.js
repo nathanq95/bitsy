@@ -17,7 +17,14 @@ describe ('habits table methods', () => {
     done();
     });
 
-    it ('should throw an error if some data is undefined', async (done) => {
+    it ('should throw an error if data is undefined', (done) => {
+      const addHabitTest = () => habits.add();
+
+      expect(addHabitTest).toThrow('Missing argument');
+      done();
+    });
+
+    it ('should throw an error if an expected value is undefined', (done) => {
       const data = {
         habit_1: 'a',
         habit_3: 'c',
@@ -26,18 +33,25 @@ describe ('habits table methods', () => {
 
       const addHabitTest = () => habits.add(data);
 
-      expect(addHabitTest).toThrow();
+      expect(addHabitTest).toThrow('Missing required value(s)');
       done();
     });
 
-    it ('should throw an error if all data is undefined', async (done) => {
-      const addHabitTest = () => habits.add();
+    it ('should throw an error if all expected values are undefined', (done) => {
+      const data = {
+        habit_5: 'a',
+        habit_6: 'b',
+        habit_7: 'c',
+        habit_8: 'd'
+      };
 
-      expect(addHabitTest).toThrow();
+      const addHabitTest = () => habits.add(data);
+
+      expect(addHabitTest).toThrow('Missing required value(s)');
       done();
     });
 
-    it ('should throw an error if argument is not of type object', async (done) => {
+    it ('should throw an error if argument is not of type object', (done) => {
       const addHabitTest = () => habits.add('abcd');
 
       expect(addHabitTest).toThrow('Invalid argument type');
@@ -54,15 +68,14 @@ describe ('habits table methods', () => {
       done();
     });
 
-    it ('should throw an error if id is undefined', async (done) => {
-      let id;
-      const getOverviewTest = () => habits.getOverview(id);
+    it ('should throw an error if id is undefined', (done) => {
+      const getOverviewTest = () => habits.getOverview();
 
-      expect(getOverviewTest).toThrow();
+      expect(getOverviewTest).toThrow('Missing argument');
       done();
     });
 
-    it ('should throw an error if id is not of type number', async (done) => {
+    it ('should throw an error if id is not of type number', (done) => {
       const id = '1';
       const getOverviewTest = () => habits.getOverview(id);
 
@@ -81,7 +94,7 @@ describe ('habits table methods', () => {
       done();
     });
 
-    it ('should throw an error if id is not of type number', async (done) => {
+    it ('should throw an error if id is not of type number', (done) => {
       const id = '1';
       const data = 2;
 
@@ -91,7 +104,7 @@ describe ('habits table methods', () => {
       done();
     });
 
-    it ('should throw an error if data is not of type number', async (done) => {
+    it ('should throw an error if data is not of type number', (done) => {
       const id = 1;
       const data = '2';
 
@@ -101,11 +114,21 @@ describe ('habits table methods', () => {
       done();
     });
 
-    it ('should throw an error if id & data are undefined', async (done) => {
-      let id, data;
+    it ('should throw an error if id is undefined', (done) => {
+      let id;
+      const data = 2;
       const getCurrentHabitTest = () => habits.getCurrent(id, data);
 
-      expect(getCurrentHabitTest).toThrow();
+      expect(getCurrentHabitTest).toThrow('Missing argument(s)');
+      done();
+    });
+
+    it ('should throw an error if data is undefined', (done) => {
+      const id = 1;
+      let data;
+      const getCurrentHabitTest = () => habits.getCurrent(id, data);
+
+      expect(getCurrentHabitTest).toThrow('Missing argument(s)');
       done();
     });
   });
@@ -125,7 +148,7 @@ describe ('habits table methods', () => {
       done();
     });
 
-    it ('should throw an error if id is not of type number', async (done) => {
+    it ('should throw an error if id is not of type number', (done) => {
       const id = '1';
       const data = {
         habit_1: 'e',
@@ -139,7 +162,7 @@ describe ('habits table methods', () => {
       done();
     });
 
-    it ('should throw an error if data is not of type object', async (done) => {
+    it ('should throw an error if data is not of type object', (done) => {
       const id = 1;
       const data = 'efgh';
       const updateHabitTest = () => habits.update(id, data);
@@ -148,7 +171,7 @@ describe ('habits table methods', () => {
       done();
     });
 
-    it ('should throw an error if id is undefined', async (done) => {
+    it ('should throw an error if id is undefined', (done) => {
       let id;
       const data = {
         habit_1: 'e',
@@ -158,20 +181,20 @@ describe ('habits table methods', () => {
       };
       const updateHabitTest = () => habits.update(id, data);
 
-      expect(updateHabitTest).toThrow();
+      expect(updateHabitTest).toThrow('Missing argument(s)');
       done();
     });    
 
-    it ('should throw an error if data is undefined', async (done) => {
+    it ('should throw an error if data is undefined', (done) => {
       const id = 1;
       let data;
       const updateHabitTest = () => habits.update(id, data);
 
-      expect(updateHabitTest).toThrow();
+      expect(updateHabitTest).toThrow('Missing argument(s)');
       done();
     }); 
 
-    it ('should not throw an error if some data is undefined', async (done) => {
+    it ('should not throw an error if some values are undefined', (done) => {
       const id = 1;
       const data = {
         habit_1: 'e',
@@ -194,15 +217,14 @@ describe ('habits table methods', () => {
       done();
     });
 
-    it ('should throw an error if id is undefined', async (done) => {
-      let id;
-      const deleteTest = () => habits.delete(id);
+    it ('should throw an error if id is undefined', (done) => {
+      const deleteTest = () => habits.delete();
 
-      expect(deleteTest).toThrow();
+      expect(deleteTest).toThrow('Missing argument');
       done();
     });
 
-    it ('should throw an error if id is not of type number', async (done) => {
+    it ('should throw an error if id is not of type number', (done) => {
       const id = '1';
       const deleteTest = () => habits.delete(id);
 
