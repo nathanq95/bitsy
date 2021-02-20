@@ -26,6 +26,7 @@
 ### Dependencies
 - Express
 - React
+- Material UI
 - node-postgres
 - memcached
 
