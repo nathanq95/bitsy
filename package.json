@@ -21,12 +21,15 @@
   },
   "homepage": "https://github.com/nathanq95/bitsy#readme",
   "dependencies": {
+    "@material-ui/core": "^4.11.3",
+    "axios": "^0.21.1",
     "express": "^4.17.1",
     "pg": "^8.5.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-redux": "^7.2.2",
-    "redux": "^4.0.5"
+    "redux": "^4.0.5",
+    "styled-components": "^5.2.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.13",
@@ -34,6 +37,7 @@
     "@babel/preset-env": "^7.12.13",
     "@babel/preset-react": "^7.12.13",
     "babel-loader": "^8.2.2",
+    "css-loader": "^5.0.2",
     "eslint": "^7.19.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-standard": "^16.0.2",
