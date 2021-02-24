@@ -9,8 +9,8 @@
     "build:dev": "webpack --mode=development",
     "build": "webpack --mode=production",
     "lint": "./node_modules/.bin/eslint",
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "test": "DATABASE=habits_dev PORT=3000 jest",
+    "test:watch": "DATABASE=habits_dev PORT=3000 jest --watch --detectOpenHandles"
   },
   "repository": {
     "type": "git",
