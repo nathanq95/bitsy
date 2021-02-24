@@ -1,7 +1,13 @@
+const { Client } = require('pg');
 const Details = require('../../database/methods/details');
 
 describe ('details table methods', () => {
   const details = new Details();
+
+  beforeAll(async (done) => {
+    Client.prototype.query = jest.fn((str) => str);
+    done();
+  });
 
   describe('add', () => {
     it ('should run an INSERT query on the details table', async (done) => {
@@ -21,6 +27,26 @@ describe ('details table methods', () => {
       const addDetailsTest = await details.add(data);
 
       expect(addDetailsTest).to.equal("INSERT INTO details(day_0, day_1, day_2, day_3, day_4, day_5, day_6, time_1, time_2, time_3, time_4) VALUES ('true', 'true', 'true', 'true', 'true', 'true', 'true', '16:00', '17:00', '18:00', '19:00')");
+      done();
+    });
+
+    it ('should throw an error if all day values are false', (done) => {
+      const data = {
+        day_0: false,
+        day_1: false,
+        day_2: false,
+        day_3: false,
+        day_4: false,
+        day_5: false,
+        day_6: false,
+        time_1: '16:00',
+        time_2: '17:00',
+        time_3: '18:00',
+        time_4: '19:00'
+      };
+      const addDetailsTest = () => details.add(data);
+
+      expect(addDetailsTest).toThrow('At least one day must have a value of true');
       done();
     });
 
