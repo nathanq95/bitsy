@@ -1,4 +1,3 @@
-const e = require('express');
 const client = require('../index');
 
 class Details {
@@ -11,8 +10,11 @@ class Details {
       }
     } else {
       try {
-        if (!data.day_0 || !data.day_1 || !data.day_3 || !data.day_4 || !data.day_5 || !data.day_6 || !data.time_1 || !data.time_2 || !data.time_3 || !data.time_4) {
+        if (data.day_0 == null || data.day_1 == null || data.day_2 == null || data.day_3 == null || data.day_4 == null || data.day_5 == null || data.day_6 == null || !data.time_1 || !data.time_2 || !data.time_3 || !data.time_4) {
           throw new Error('Missing required value(s)');
+        }
+        if (!data.day_0 && !data.day_1 && !data.day_2 && !data.day_3 && !data.day_4 && !data.day_5 && !data.day_6) {
+          throw new Error('At least one day must have a value of true');
         }
         return client.query(`INSERT INTO details(day_0, day_1, day_2, day_3, day_4, day_5, day_6, time_1, time_2, time_3, time_4) VALUES ('${data.day_0}', '${data.day_1}', '${data.day_2}', '${data.day_3}', '${data.day_4}', '${data.day_5}', '${data.day_6}', '${data.time_1}', '${data.time_2}', '${data.time_3}', '${data.time_4}')`);
       } catch (err) {
