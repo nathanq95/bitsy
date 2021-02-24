@@ -1,7 +1,13 @@
+const { Client } = require('pg');
 const Habits = require('../../database/methods/habits');
 
 describe ('habits table methods', () => {
   const habits = new Habits();
+  
+  beforeAll(async (done) => {
+    Client.prototype.query = jest.fn((str) => str);
+    done();
+  });
 
   describe ('add', () => {
     it ('should run an INSERT query on the habits table', async (done) => {

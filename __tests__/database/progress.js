@@ -1,7 +1,13 @@
+const { Client } = require('pg');
 const Progress = require('../../database/methods/progress');
 
 describe ('progress table methods', () => {
   const progress = new Progress();
+
+  beforeAll(async (done) => {
+    Client.prototype.query = jest.fn((str) => str);
+    done();
+  });
 
   describe ('init', () => {
     it ('should run an INSERT query on the progress table', async (done) => {
