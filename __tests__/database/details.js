@@ -1,13 +1,15 @@
-const { Client } = require('pg');
 const Details = require('../../database/methods/details');
+
+jest.mock('../../database/index', () => {
+  const client = {
+    query: jest.fn((str) => str)
+  }
+
+  return client;
+});
 
 describe ('details table methods', () => {
   const details = new Details();
-
-  beforeAll(async (done) => {
-    Client.prototype.query = jest.fn((str) => str);
-    done();
-  });
 
   describe('add', () => {
     it ('should run an INSERT query on the details table', async (done) => {
@@ -249,14 +251,21 @@ describe ('details table methods', () => {
         day_2: true,
         day_4: true,
         day_5: false,
-        time_1: '01:00',
-        time_3: '03:00',
-        time_4: '04:00'
+        day_6: true,
       };
 
+      const data2 = {
+        time_1: '01:00',
+        time_2: '02:00',
+        time_3: '03:00',
+        time_4: '04:00'
+      }
+
       const updateTest = () => details.update(id, data);
+      const updateTest2 = () => details.update(id, data2);
       
       expect(updateTest).to.not.throw();
+      expect(updateTest2).to.not.throw();
       done();
     });
   });
