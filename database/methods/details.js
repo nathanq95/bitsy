@@ -24,30 +24,26 @@ class Details {
   }
 
   get(data) {
-    if (typeof data !== 'number') {
+    try {
       if (data) {
-        throw new Error('Invalid argument type');
+        if (typeof data !== 'number') {
+          throw new Error('Invalid argument type');
+        } 
       } else {
         throw new Error('Missing argument');
       }
-    } else {
-      try {
-        return client.query(`SELECT id, current_habit, time_1, time_2, time_3, time_4 FROM details WHERE day_${data} = true`);
-      } catch (err) {
-        throw new Error(err);
-      }
+      return client.query(`SELECT id, current_habit, time_1, time_2, time_3, time_4 FROM details WHERE day_${data} = true`);
+    } catch (err) {
+      throw new Error(err);
     }
   }
 
   update(id, data) {
-    if (typeof id !== 'number' || typeof data !== 'object') {
-      if (!id || !data) {
-        throw new Error('Missing argument(s)');
-      } else {
-        throw new Error('Invalid argument type');
-      }
-    } else {
-      try {
+    try {
+      if (id && data) {
+        if (typeof id !== 'number' || typeof data !== 'object') {
+          throw new Error('Invalid argument type');
+        }
         let updateData = '';
       
         if (data.time_1) {
@@ -108,49 +104,64 @@ class Details {
           updateData += ` day_5 = ${data.day_5} `;
         }
         if (data.day_6 !== undefined) {
-          if (updateData.length > 0) {
+          if (updateData.length > 0) { 
             updateData += ',';
           }
           updateData += ` day_6 = ${data.day_6} `;
         }
       
         return client.query(`UPDATE details SET ${updateData} WHERE id = ${id}`);
-      } catch (err) {
-        throw new Error(err);
+      } else {
+        throw new Error('Missing argument(s)');
       }
+    } catch (err) {
+      throw new Error(err);
     }
   }
 
   updateCurrent(id) {
-    if (typeof id !== 'number') {
+    try {
       if (id) {
-        throw new Error('Invalid argument type');
+        if (typeof id !== 'number') {
+          throw new Error('Invalid argument type');
+        }
+        return client.query(`UPDATE details SET current_habit = current_habit + 1 WHERE id = ${id}`);
       } else {
         throw new Error('Missing argument');
       }
-    } else {
-      try {
-        return client.query(`UPDATE details SET current_habit = current_habit + 1 WHERE id = ${id}`);
-      } catch (err) {
-        throw new Error(err);
-      }
+    } catch (err) {
+      throw new Error(err);
     }
   }
 
   delete(id) {
-    if (typeof id !== 'number') {
+    try {
       if (id) {
-        throw new Error('Invalid argument type');
+        if (typeof id !== 'number') {
+          throw new Error('Invalid argument type');
+        } 
+        return client.query(`DELETE FROM details WHERE id = ${id}`);
       } else {
         throw new Error('Missing argument');
       }
-    } else {
-      try {
-        return client.query(`DELETE FROM details WHERE id = ${id}`);
-      } catch (err) {
-        throw new Error(err);
-      }
+    } catch (err) {
+      throw new Error(err);
     }
+
+
+    // if (typeof id !== 'number') {
+    //   if (id) {
+    //     throw new Error('Invalid argument type');
+    //   } else {
+    //     throw new Error('Missing argument');
+    //   }
+    // } else {
+    //   try {
+    //     return client.query(`DELETE FROM details WHERE id = ${id}`);
+    //   } catch (err) {
+    //     throw new Error(err);
+    //   }
+    // }
   }
 }
 
