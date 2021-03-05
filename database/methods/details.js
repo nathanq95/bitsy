@@ -147,21 +147,6 @@ class Details {
     } catch (err) {
       throw new Error(err);
     }
-
-
-    // if (typeof id !== 'number') {
-    //   if (id) {
-    //     throw new Error('Invalid argument type');
-    //   } else {
-    //     throw new Error('Missing argument');
-    //   }
-    // } else {
-    //   try {
-    //     return client.query(`DELETE FROM details WHERE id = ${id}`);
-    //   } catch (err) {
-    //     throw new Error(err);
-    //   }
-    // }
   }
 }
 
