@@ -1,13 +1,15 @@
-const { Client } = require('pg');
 const Habits = require('../../database/methods/habits');
+
+jest.mock('../../database/index', () => {
+  const client = {
+    query: jest.fn((str) => str)
+  }
+
+  return client;
+});
 
 describe ('habits table methods', () => {
   const habits = new Habits();
-  
-  beforeAll(async (done) => {
-    Client.prototype.query = jest.fn((str) => str);
-    done();
-  });
 
   describe ('add', () => {
     it ('should run an INSERT query on the habits table', async (done) => {
@@ -205,10 +207,16 @@ describe ('habits table methods', () => {
       const data = {
         habit_1: 'e',
         habit_2: 'f',
-        habit_4: 'h'
       };
-      const updateHabitTest = () => habits.update(id, data);
+      const data2 = {
+        habit_3: 'g',
+        habit_4: 'h',
+      };
 
+      const updateHabitTest = () => habits.update(id, data);
+      const updateHabitTest2 = () => habits.update(id, data2);
+
+      expect(updateHabitTest2).not.to.throw();
       expect(updateHabitTest).not.to.throw();
       done();
     });    
