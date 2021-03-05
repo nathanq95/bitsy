@@ -253,7 +253,6 @@ describe ('details table methods', () => {
         day_5: false,
         day_6: true,
       };
-
       const data2 = {
         time_1: '01:00',
         time_2: '02:00',
