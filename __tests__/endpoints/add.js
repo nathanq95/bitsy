@@ -1,36 +1,44 @@
 const { Client } = require('pg');
 const request = require('supertest');
 const app = require('../../server/app');
+const connection = require('../../database/index');
 
-describe (' /add', () => {
+describe ('/add', () => {
   const client = new Client({
     database: 'habits_dev',
     host: 'localhost',
   });
-
-  client.connect((err) => {
-    if (err) {
-      console.log('Error connecting to the database: ', err);
-    }
+  
+  beforeAll( async () => {
+    await client.connect((err) => {
+      if (err) {
+        console.log('Error connecting to the database: ', err);
+      }
+    });
   });
 
-  beforeEach( async (done) => {
-    await client.query('ALTER SEQUENCE details_id_seq RESTART WITH 1;');
-    await client.query('ALTER SEQUENCE progress_id_seq RESTART WITH 1;');
-    await client.query('ALTER SEQUENCE habits_id_seq RESTART WITH 1;');
-    
-    done();
-  });
-
-  afterEach( async (done) => {
+  afterAll( async () => {
     await client.query('DELETE FROM details WHERE id >= 0');
     await client.query('DELETE FROM progress WHERE id >= 0');
     await client.query('DELETE FROM habits WHERE id >= 0');
-
-    done();
+    await client.query('ALTER SEQUENCE details_id_seq RESTART WITH 1;');
+    await client.query('ALTER SEQUENCE progress_id_seq RESTART WITH 1;');
+    await client.query('ALTER SEQUENCE habits_id_seq RESTART WITH 1;');
+    await client.end((err) => {
+      if (err) {
+        console.log(err);
+      }
+    });
+    await connection.end((err) => {
+      if (err) {
+        console.log(err);
+      }
+    });
   });
 
-  it ('should receive a 201 response when sending all required data', async (done) => {
+  it ('should receive a 201 response when sending all required data', (done) => {
+    const expectedText = 'OK';
+
     const data = {
         habit_1: 'a',
         habit_2: 'b',
@@ -49,36 +57,23 @@ describe (' /add', () => {
         time_4: '07:00'
       };
       
-    await request(app).post('/api/add').send(data).expect(201);
-    const expected = data;
-    let habits = await client.query('SELECT * FROM habits');
-    let details = await client.query('SELECT * FROM details');
-    const progress = await client.query('SELECT * FROM progress');
-    const actualHabits = habits.rows[0];
-    const actualDetails = details.rows[0];
-    const actualProgress = progress.rows[0];
-
-    expect(actualHabits.habit_1).to.equal(expected.habit_1);
-    expect(actualHabits.habit_2).to.equal(expected.habit_2);
-    expect(actualHabits.habit_3).to.equal(expected.habit_3);
-    expect(actualHabits.habit_4).to.equal(expected.habit_4);
-    expect(actualDetails.day_0).to.equal(expected.day_0);
-    expect(actualDetails.day_1).to.equal(expected.day_1);
-    expect(actualDetails.day_2).to.equal(expected.day_2);
-    expect(actualDetails.day_3).to.equal(expected.day_3);
-    expect(actualDetails.day_4).to.equal(expected.day_4);
-    expect(actualDetails.day_5).to.equal(expected.day_5);
-    expect(actualDetails.day_6).to.equal(expected.day_6);
-    expect(actualDetails.time_1).to.equal(expected.time_1);
-    expect(actualDetails.time_2).to.equal(expected.time_2);
-    expect(actualDetails.time_3).to.equal(expected.time_3);
-    expect(actualDetails.time_4).to.equal(expected.time_4);
-    expect(actualProgress.completed).to.equal(false);
-    expect(actualProgress.streak).to.equal(0);
+    request(app)
+      .post('/api/add')
+      .send(data)
+      .expect(201)
+      .end((err, res) => {
+        if (err) {
+          return done(err)
+        } 
+        expect(res.text).to.equal(expectedText);
+        return done();
+      });
     done();
   });
 
-  it ('should receive a 400 response when missing some required value(s)', async (done) => {
+  it ('should receive a 400 response when missing some required value(s)', (done) => {
+    const expectedText = 'Missing required value(s)';
+
     request(app)
       .post('/api/add')
       .send({
@@ -97,12 +92,17 @@ describe (' /add', () => {
       })
       .expect(400)
       .end((err, res) => {
-        if (err) return done(err);
+        if (err) {
+          return done(err)
+        } 
+        expect(res.text).to.equal(expectedText);
         return done();
       });
   });
 
-  it ('should receive a 400 response if a habit value is not a string', async (done) => {
+  it ('should receive a 400 response if a habit value is not a string', (done) => {
+    const expectedText = 'INVALID DATA TYPE';
+
     request(app)
       .post('/api/add')
       .send({
@@ -124,12 +124,17 @@ describe (' /add', () => {
       })
       .expect(400)
       .end((err, res) => {
-        if (err) return done(err);
+        if (err) {
+          return done(err)
+        }
+        expect(res.text).to.equal(expectedText);
         return done();
       });
   });
 
-  it ('should receive a 400 response if a day value is not a boolean', async (done) => {
+  it ('should receive a 400 response if a day value is not a boolean', (done) => {
+    const expectedText = 'INVALID DATA TYPE';
+
     request(app)
       .post('/api/add')
       .send({
@@ -151,12 +156,17 @@ describe (' /add', () => {
       })
       .expect(400)
       .end((err, res) => {
-        if (err) return done(err);
+        if (err) {
+          return done(err)
+        }
+        expect(res.text).to.equal(expectedText);
         return done();
       });
   });
 
-  it ('should receive a 400 response if a time value is not a string', async (done) => {
+  it ('should receive a 400 response if a time value is not a string', (done) => {
+    const expectedText = 'INVALID DATA TYPE';
+
     request(app)
       .post('/api/add')
       .send({
@@ -178,12 +188,17 @@ describe (' /add', () => {
       })
       .expect(400)
       .end((err, res) => {
-        if (err) return done(err);
-        return done();
+          if (err) {
+            return done(err)
+          }
+          expect(res.text).to.equal(expectedText);
+          return done();
       });
   });
 
-  it ('should receive a 400 response if a time value does not have the format "HH:MM"', async (done) => {
+  it ('should receive a 400 response if a time value does not have the format "HH:MM"', (done) => {
+    const expectedText = 'INVALID TIME FORMAT';
+
     request(app)
       .post('/api/add')
       .send({
@@ -205,7 +220,10 @@ describe (' /add', () => {
       })
       .expect(400)
       .end((err, res) => {
-        if (err) return done(err);
+        if (err) {
+          return done(err)
+        }
+        expect(res.text).to.equal(expectedText);
         return done();
       });
   });
