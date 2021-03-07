@@ -9,8 +9,8 @@
     "build:dev": "webpack --mode=development",
     "build": "webpack --mode=production",
     "lint": "./node_modules/.bin/eslint",
-    "test": "DATABASE=habits_dev PORT=3000 jest --collect-coverage",
-    "test:watch": "DATABASE=habits_dev PORT=3000 jest  --collect-coverage --watchAll"
+    "test": "DATABASE=habits_dev ENVIRONMENT=test PORT=3000 jest",
+    "test:watch": "DATABASE=habits_dev PORT=3000 ENVIRONMENT=test jest  --collect-coverage --watchAll --detectOpenHandles"
   },
   "repository": {
     "type": "git",
