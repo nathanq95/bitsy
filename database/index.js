@@ -8,7 +8,7 @@ const client = new Client({
 
 client.connect()
   .then(() => {
-    console.log(`Connected to the ${database} database!`);
+    if (process.env.ENVIRONMENT !== 'test') console.log(`Connected to the ${database} database!`);
   })
   .catch((err) => {
     console.error(`Error connecting to the ${database} database: `, err.stack);
