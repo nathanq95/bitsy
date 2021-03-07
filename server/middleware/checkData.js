@@ -4,7 +4,7 @@ const checkData = (req, res, next) => {
 
   if (req.baseUrl.includes('add') || req.baseUrl.includes('update')) {
     if (req.baseUrl.includes('add')) {
-      if (!data.habit_1 || !data.habit_2 || !data.habit_3 || !data.habit_4) {
+      if (data.habit_1 == undefined || data.habit_2 == undefined || data.habit_3 == undefined || data.habit_4 == undefined) {
         return res.status(400).send('Missing required value(s)');
       }
     }   
