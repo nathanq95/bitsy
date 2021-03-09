@@ -57,7 +57,11 @@ router.route('/today')
         progressData.push(data.rows[0]);
       }
 
-      res.send({ progressData, detailsData: detailsData.rows, habitData }).status(200);
+      if (progressData.length < 1 || habitData.length < 1 || detailsData.length < 1) {
+        res.status(204).send('No Content');
+      } else {
+        res.send({ progressData, detailsData: detailsData.rows, habitData }).status(200);
+      }
     } catch (err) {
       res.status(500).send('INTERNAL SERVER ERROR');
     }
@@ -68,7 +72,7 @@ router.route('/overview')
     try {
       const { id } = req.body;
       const overviewData = await habits.getOverview(id);
-      if (!overviewData.rows[0]) res.status(204).send('NO CONTENT');
+      if (!overviewData.rows[0]) res.status(204).send('No Content');
       res.status(200).send(overviewData.rows[0]);
     } catch (err) {
       res.status(500).send('INTERNAL SERVER ERROR');
