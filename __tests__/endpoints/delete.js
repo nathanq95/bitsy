@@ -1,4 +1,3 @@
-const { Client } = require('pg');
 const request = require('supertest');
 const app = require('../../server/app');
 const client = require('../../database/index');
@@ -30,21 +29,21 @@ describe('/delete', () => {
   it ('should receive a 201 response if data exists for the given id', async (done) => {
     const expectedText = 'OK';
     const data = {
-        habit_1: 'a',
-        habit_2: 'b',
-        habit_3: 'c',
-        habit_4: 'd',
-        day_0: true,
-        day_1: true,
-        day_2: true,
-        day_3: true,
-        day_4: true,
-        day_5: true,
-        day_6: true,
-        time_1: '16:00',
-        time_2: '17:00',
-        time_3: '18:00',
-        time_4: '19:00'
+      habit_1: 'a',
+      habit_2: 'b',
+      habit_3: 'c',
+      habit_4: 'd',
+      day_0: true,
+      day_1: true,
+      day_2: true,
+      day_3: true,
+      day_4: true,
+      day_5: true,
+      day_6: true,
+      time_1: '16:00',
+      time_2: '17:00',
+      time_3: '18:00',
+      time_4: '19:00'
     };
   
     await client.query(`INSERT INTO habits(habit_1, habit_2, habit_3, habit_4) VALUES('${data.habit_1}', '${data.habit_2}', '${data.habit_3}', '${data.habit_4}')`);
@@ -56,32 +55,33 @@ describe('/delete', () => {
       .send({id: 1})
       .expect(201)
       .end((err, res) => {
-          if (err) {
-          return done(err)
-          } 
-          expect(res.text).to.equal(expectedText);
-          return done();
+        if (err) {
+         return done(err)
+        }
+
+        expect(res.text).to.equal(expectedText);
+        return done();
       });
   });
 
   it ('should delete all data with the given id', async (done) => {
     const expectedText = 'OK';
     const data = {
-        habit_1: 'a',
-        habit_2: 'b',
-        habit_3: 'c',
-        habit_4: 'd',
-        day_0: true,
-        day_1: true,
-        day_2: true,
-        day_3: true,
-        day_4: true,
-        day_5: true,
-        day_6: true,
-        time_1: '16:00',
-        time_2: '17:00',
-        time_3: '18:00',
-        time_4: '19:00'
+      habit_1: 'a',
+      habit_2: 'b',
+      habit_3: 'c',
+      habit_4: 'd',
+      day_0: true,
+      day_1: true,
+      day_2: true,
+      day_3: true,
+      day_4: true,
+      day_5: true,
+      day_6: true,
+      time_1: '16:00',
+      time_2: '17:00',
+      time_3: '18:00',
+      time_4: '19:00'
     };
     let habitsData;
     let progressData;
@@ -96,17 +96,18 @@ describe('/delete', () => {
       .send({id: 1})
       .expect(201)
       .end( async (err, res) => {
-          if (err) {
-          return done(err)
-          } 
-          habitsData = await client.query('SELECT * FROM habits WHERE id = 1');
-          progressData = await client.query('SELECT * FROM progress WHERE id = 1');
-          detailsData = await client.query('SELECT * FROM details WHERE id = 1');
+        if (err) {
+         return done(err)
+        }
 
-          expect(habitsData.rows.length).to.equal(0);
-          expect(progressData.rows.length).to.equal(0);
-          expect(detailsData.rows.length).to.equal(0);
-          return done();
+        habitsData = await client.query('SELECT * FROM habits WHERE id = 1');
+        progressData = await client.query('SELECT * FROM progress WHERE id = 1');
+        detailsData = await client.query('SELECT * FROM details WHERE id = 1');
+
+        expect(habitsData.rows.length).to.equal(0);
+        expect(progressData.rows.length).to.equal(0);
+        expect(detailsData.rows.length).to.equal(0);
+        return done();
       });
   });
 
@@ -118,13 +119,12 @@ describe('/delete', () => {
       .send({id: '1'})
       .expect(400)
       .end((err, res) => {
-      if (err) {
-        return done(err)
-      } 
+        if (err) {
+          return done(err)
+        } 
 
-      expect(res.text).to.equal(expectedText);
-      return done();
+        expect(res.text).to.equal(expectedText);
+        return done();
       });
   });
-
 });

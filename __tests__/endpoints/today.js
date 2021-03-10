@@ -1,21 +1,8 @@
-const { Client } = require('pg');
 const request = require('supertest');
 const app = require('../../server/app');
-const connection = require('../../database/index');
+const client = require('../../database/index');
 
 describe('/today', () => {
-  const client = new Client({
-    database: 'habits_dev',
-    host: 'localhost',
-  });
-    
-  beforeAll( async () => {
-    await client.connect((err) => {
-      if (err) {
-        console.log('Error connecting to the database: ', err);
-      }
-    });
-  });
 
   afterEach( async () => {
     await client.query('DELETE FROM details WHERE id >= 0');
@@ -69,18 +56,21 @@ describe('/today', () => {
         if (err) {
           return done(err)
         } 
+
         return done();
       });
   });
 
   it ('should receive a 204 response if data does not exist for the current day', async (done) => {
+
     request(app)
       .get('/api/today')
       .expect(204)
       .end((err, res) => {
         if (err) {
           return done(err)
-        } 
+        }
+
         return done();
       });
   });
