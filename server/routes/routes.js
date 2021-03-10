@@ -85,7 +85,7 @@ router.route('/complete')
       const { id } = req.body;
       const streak = await progress.complete(id);
 
-      if (streak.rows[0].streak > 5) {
+      if (streak.rows[0].streak > 18) {
         await details.updateCurrent(id);
         await progress.reset(id);
       }
@@ -111,7 +111,7 @@ router.route('/update')
     try {
       const id = req.body.id;
       const data = req.body;
-      console.log(data);
+
       if (data.habit_1 || data.habit_2 || data.habit_3 || data.habit_4) {
         await habits.update(data.id, data);
       }
