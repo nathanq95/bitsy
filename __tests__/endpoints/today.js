@@ -19,11 +19,6 @@ describe('/today', () => {
         console.log(err);
       }
     });
-    await connection.end((err) => {
-      if (err) {
-        console.log(err);
-      }
-    });
   });
 
   it ('should receive a 200 response if data exists for the current day', async (done) => {
