@@ -19,11 +19,6 @@ describe('/delete', () => {
         console.log(err);
       }
     });
-    await connection.end((err) => {
-      if (err) {
-        console.log(err);
-      }
-    });
   });
 
   it ('should receive a 201 response if data exists for the given id', async (done) => {
