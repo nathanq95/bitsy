@@ -12,6 +12,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/', express.static(path.join(__dirname, '../client/dist')));
 app.use('*', require('./middleware/checkId'));
+app.use('/api/add', require('./middleware/checkDayVal'));
 app.use('*', require('./middleware/checkData'));
 app.use('/api', require('./routes/routes.js'));
 
