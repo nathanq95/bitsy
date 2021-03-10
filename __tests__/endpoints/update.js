@@ -1,21 +1,8 @@
-const { Client } = require('pg');
 const request = require('supertest');
 const app = require('../../server/app');
-const connection = require('../../database/index');
+const client = require('../../database/index');
 
 describe('/update', () => {
-  const client = new Client({
-    database: 'habits_dev',
-    host: 'localhost',
-  });
-    
-  beforeAll( async () => {
-    await client.connect((err) => {
-      if (err) {
-        console.log('Error connecting to the database: ', err);
-      }
-    });
-  });
 
   afterEach( async () => {
     await client.query('DELETE FROM details WHERE id >= 0');
@@ -42,21 +29,21 @@ describe('/update', () => {
   it ('should receive a 201 response if data exists for the given id', async (done) => {
     const expectedText = 'OK';
     const data = {
-        habit_1: 'a',
-        habit_2: 'b',
-        habit_3: 'c',
-        habit_4: 'd',
-        day_0: true,
-        day_1: true,
-        day_2: true,
-        day_3: true,
-        day_4: true,
-        day_5: true,
-        day_6: true,
-        time_1: '16:00',
-        time_2: '17:00',
-        time_3: '18:00',
-        time_4: '19:00'
+      habit_1: 'a',
+      habit_2: 'b',
+      habit_3: 'c',
+      habit_4: 'd',
+      day_0: true,
+      day_1: true,
+      day_2: true,
+      day_3: true,
+      day_4: true,
+      day_5: true,
+      day_6: true,
+      time_1: '16:00',
+      time_2: '17:00',
+      time_3: '18:00',
+      time_4: '19:00'
     };
   
     await client.query(`INSERT INTO habits(habit_1, habit_2, habit_3, habit_4) VALUES('${data.habit_1}', '${data.habit_2}', '${data.habit_3}', '${data.habit_4}')`);
@@ -68,37 +55,38 @@ describe('/update', () => {
       .send({id: 1})
       .expect(201)
       .end((err, res) => {
-          if (err) {
+        if (err) {
           return done(err)
-          } 
-          expect(res.text).to.equal(expectedText);
-          return done();
+        }
+
+        expect(res.text).to.equal(expectedText);
+        return done();
       });
   });
 
   it ('should only update given values', async (done) => {
     const data = {
-        habit_1: 'a',
-        habit_2: 'b',
-        habit_3: 'c',
-        habit_4: 'd',
-        day_0: true,
-        day_1: true,
-        day_2: true,
-        day_3: true,
-        day_4: true,
-        day_5: true,
-        day_6: true,
-        time_1: '16:00',
-        time_2: '17:00',
-        time_3: '18:00',
-        time_4: '19:00'
+      habit_1: 'a',
+      habit_2: 'b',
+      habit_3: 'c',
+      habit_4: 'd',
+      day_0: true,
+      day_1: true,
+      day_2: true,
+      day_3: true,
+      day_4: true,
+      day_5: true,
+      day_6: true,
+      time_1: '16:00',
+      time_2: '17:00',
+      time_3: '18:00',
+      time_4: '19:00'
     };
     const updatedData = {
-        id: 1,
-        habit_1: 'c',
-        day_1: false,
-        time_1: '17:00',
+      id: 1,
+      habit_1: 'c',
+      day_1: false,
+      time_1: '17:00',
     };
     let updatedHabitValues;
     let updatedDetailsValues;
@@ -114,7 +102,8 @@ describe('/update', () => {
       .end( async (err, res) => {
         if (err) {
           return done(err)
-        } 
+        }
+
         updatedHabitValues = await client.query('SELECT * FROM habits WHERE id = 1');
         updatedDetailsValues = await client.query('SELECT * FROM details WHERE id = 1');
 
@@ -136,13 +125,12 @@ describe('/update', () => {
       .send({id: '1'})
       .expect(400)
       .end((err, res) => {
-      if (err) {
-        return done(err)
-      } 
+        if (err) {
+          return done(err)
+        } 
 
-      expect(res.text).to.equal(expectedText);
-      return done();
+        expect(res.text).to.equal(expectedText);
+        return done();
       });
   });
-
 });
