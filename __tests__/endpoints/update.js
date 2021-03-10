@@ -133,4 +133,21 @@ describe('/update', () => {
         return done();
       });
   });
+
+  it ('should receive a 400 response if id is undefined', async (done) => {
+    const expectedText = 'MISSING id IN REQUEST BODY';
+
+    request(app)
+      .patch('/api/update')
+      .send({})
+      .expect(400)
+      .end((err, res) => {
+        if (err) {
+          return done(err)
+        } 
+
+        expect(res.text).to.equal(expectedText);
+        return done();
+      });
+  });
 });
