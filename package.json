@@ -39,11 +39,8 @@
     "@babel/preset-env": "^7.12.13",
     "@babel/preset-react": "^7.12.13",
     "babel-loader": "^8.2.2",
-<<<<<<< HEAD
     "css-loader": "^5.0.2",
-=======
     "chai": "^4.3.0",
->>>>>>> master
     "eslint": "^7.19.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-standard": "^16.0.2",
