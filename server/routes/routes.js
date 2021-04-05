@@ -63,7 +63,7 @@ router.route('/today')
         res.send({ progressData, detailsData: detailsData.rows, habitData }).status(200);
       }
     } catch (err) {
-      res.status(500).send('INTERNAL SERVER ERROR');
+      res.status(500).send(err);
     }
   });
 

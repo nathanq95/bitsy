@@ -25,7 +25,7 @@ class Details {
 
   get(data) {
     try {
-      if (data) {
+      if (data !== undefined) {
         if (typeof data !== 'number') {
           throw new Error('Invalid argument type');
         } 
@@ -40,7 +40,7 @@ class Details {
 
   update(id, data) {
     try {
-      if (id && data) {
+      if (id !== undefined && data) {
         if (typeof id !== 'number' || typeof data !== 'object') {
           throw new Error('Invalid argument type');
         }
@@ -121,7 +121,7 @@ class Details {
 
   updateCurrent(id) {
     try {
-      if (id) {
+      if (id !== undefined) {
         if (typeof id !== 'number') {
           throw new Error('Invalid argument type');
         }
@@ -136,7 +136,7 @@ class Details {
 
   delete(id) {
     try {
-      if (id) {
+      if (id !== undefined) {
         if (typeof id !== 'number') {
           throw new Error('Invalid argument type');
         } 
