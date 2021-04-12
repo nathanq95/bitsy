@@ -115,7 +115,7 @@ router.route('/update')
       if (data.habit_1 || data.habit_2 || data.habit_3 || data.habit_4) {
         await habits.update(data.id, data);
       }
-      if (data.time_1 || data.time_2 || data.time_3 || data.time_4 || data.day_1 || data.day_2 || data.day_3 || data.day_4 || data.day_5 || data.day_6 || data.day_7) {
+      if (data.time_1 || data.time_2 || data.time_3 || data.time_4 || data.day_0 || data.day_1 || data.day_2 || data.day_3 || data.day_4 || data.day_5 || data.day_6 || data.day_7) {
         await details.update(id, data);
       }
       res.status(201).send('OK');
