@@ -10,6 +10,22 @@ import Container from '@material-ui/core/Container';
 
 const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
+const displaySelected = (arr) => {
+  let selected = arr;
+
+  if (selected.length == 7) {
+    selected = ['day'];
+  } else if (selected.length == 5 && selected.includes('Monday') && selected.includes('Tuesday') && selected.includes('Wednesday') && selected.includes('Thursday') && selected.includes('Friday')) {
+    selected = ['Weekday'];
+  } else if (selected.length == 2 && selected.includes('Sunday') && selected.includes('Saturday')) {
+    selected = ['Weekend'];
+  } else {
+    return selected.join(', ');
+  }
+
+  return selected;
+};
+
 const NewForm = (props) => (
   <div className="add-form">
     <form>
@@ -24,9 +40,16 @@ const NewForm = (props) => (
         <div className="day-selector">
           <InputLabel shrink={false}>Every</InputLabel>
           <Select
+          style={{
+            maxWidth: "150px"
+          }}
           MenuProps={{
             anchorOrigin: {
               vertical: "top",
+              horizontal: "center"
+            },
+            transformOrigin: {
+              vertical: "bottom",
               horizontal: "center"
             },
             getContentAnchorEl: null
@@ -36,13 +59,13 @@ const NewForm = (props) => (
           value={props.selectedDays}
           onChange={(e) => props.handleChange(e)}
           multiple
-          renderValue={(selected) => selected.join(', ')}
+          renderValue={(selected) => displaySelected(selected)}
           required
           >
             {dayNames.map((day) => (
               <MenuItem key={day} value={day}>
-                <Checkbox checked={props.selectedDays.indexOf(day) > -1}/>
-                <ListItemText primary={day} name={'yeet'}/>
+                <Checkbox checked={props.selectedDays.indexOf(day) > -1} />
+                <ListItemText primary={day}/>
               </MenuItem>
             ))}
           </Select>
