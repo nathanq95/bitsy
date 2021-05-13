@@ -25,7 +25,7 @@
 
 .add-form {
     text-align: center;
-    padding: 150px;
+    padding: 100px;
 }
 
 .new {
@@ -35,4 +35,10 @@
 
 .MuiFormControl-root.MuiTextField-root.habit {
     padding: 25px;
+}
+
+.MuiFormLabel-root.MuiInputLabel-root {
+    display: initial;
+    transform-origin: top left;
+    padding: 10px;
 }
