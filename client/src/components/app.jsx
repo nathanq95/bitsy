@@ -31,13 +31,12 @@ class App extends React.Component{
     if (this.checkValues()) {
       // let daysData = document.getElementById('selected-day').textContent.split(', ');
       const day0 = this.generateDayBoolean('Sunday');
-      const day1 = this.generateDayBoolean('Sunday');
-      const day2 = this.generateDayBoolean('Sunday');
-      const day3 = this.generateDayBoolean('Sunday');
-      const day4 = this.generateDayBoolean('Sunday');
-      const day5 = this.generateDayBoolean('Sunday');
-      const day6 = this.generateDayBoolean('Sunday');
-      console.log(day0);
+      const day1 = this.generateDayBoolean('Monday');
+      const day2 = this.generateDayBoolean('Tuesday');
+      const day3 = this.generateDayBoolean('Wednesday');
+      const day4 = this.generateDayBoolean('Thursday');
+      const day5 = this.generateDayBoolean('Friday');
+      const day6 = this.generateDayBoolean('Saturday');
       const reqBody = {
         habit_1: document.getElementById('bit1').value,
         habit_2: document.getElementById('bit2').value,
@@ -68,9 +67,7 @@ class App extends React.Component{
       });
   
       event.preventDefault();
-    } else {
-      console.log('missing something');
-    }
+    } 
   }
 
   checkValues() {
@@ -79,7 +76,7 @@ class App extends React.Component{
     const bit3Val = document.getElementById('bit3').value;
     const bit4Val = document.getElementById('bit4').value;
     const dayVal = this.state.selectedDays;
-    console.log(dayVal.length);
+    
     if (bit1Val.length < 1 || bit2Val.length < 1 || bit3Val.length < 1 || bit4Val.length < 1 || dayVal.length < 1) {
       return false;
     } else {
