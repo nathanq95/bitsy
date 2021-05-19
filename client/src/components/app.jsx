@@ -49,10 +49,10 @@ class App extends React.Component{
         day_4: day4,
         day_5: day5,
         day_6: day6,
-        time_1: '18:00',
-        time_2: '19:00',
-        time_3: '20:00',
-        time_4: '21:00',
+        time_1: document.getElementById('time1').value,
+        time_2: document.getElementById('time2').value,
+        time_3: document.getElementById('time3').value,
+        time_4: document.getElementById('time4').value,
       };
   
       axios.post('http://localhost:3000/api/add', reqBody)
