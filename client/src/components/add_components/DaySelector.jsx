@@ -25,7 +25,7 @@ const displaySelected = (arr) => {
 
 const DaySelector = (props) => (
     <div className="day-selector">
-    <InputLabel shrink={false}>Every</InputLabel>
+    <InputLabel className="day" shrink={false}>Every</InputLabel>
     <Select
     style={{
       maxWidth: "150px"

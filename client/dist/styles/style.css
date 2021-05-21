@@ -9,7 +9,7 @@
 
 .side-bar {
     width: 200px;
-    height: 800px;
+    height: fit-content;
 }
 
 .side-tab {
@@ -25,7 +25,7 @@
 
 .add-form {
     text-align: center;
-    padding: 100px;
+    padding: 50px;
 }
 
 .new {
@@ -37,8 +37,55 @@
     padding: 25px;
 }
 
-.MuiFormLabel-root.MuiInputLabel-root {
+/* .MuiFormLabel-root.MuiInputLabel-root {
     display: initial;
     transform-origin: top left;
     padding: 10px;
+} */
+
+.MuiContainer-root.new.MuiContainer-fixed.MuiContainer-maxWidthXs {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 70% 15% 15%;
+}
+
+.submit-btn {
+    grid-row-start: 3;
+    padding-left: 155px;
+    padding-top: 10px;
+}
+
+.habit-selector {
+    display: grid;
+    grid-template-rows: 25% 25% 25% 25%;
+}
+
+.time-selector {
+    display: grid;
+    grid-template-rows: 25% 25% 25% 25%;
+    grid-template-columns: 30% 70%;
+    width: 155px;
+}
+
+.day-selector {
+    padding-left: 135px;
+    padding-top: 25px;
+}
+
+.time-label {
+    padding-top: 45px;
+    padding-right: 25px;
+}
+
+.MuiFormControl-root.MuiTextField-root {
+    padding-top: 40px;
+}
+
+.MuiInputBase-root.MuiInput-root.MuiInput-underline #selected-day{
+    max-width: 100px;
+    width: 100px;
+}
+
+label.MuiFormLabel-root.MuiInputLabel-root.day.MuiInputLabel-animated {
+    padding-left: 40px;
 }
