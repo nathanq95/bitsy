@@ -29,7 +29,6 @@ class App extends React.Component{
 
   handleSubmit(event) {
     if (this.checkValues()) {
-      // let daysData = document.getElementById('selected-day').textContent.split(', ');
       const day0 = this.generateDayBoolean('Sunday');
       const day1 = this.generateDayBoolean('Monday');
       const day2 = this.generateDayBoolean('Tuesday');
