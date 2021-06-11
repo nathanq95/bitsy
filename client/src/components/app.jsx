@@ -14,8 +14,28 @@ class App extends React.Component{
 
     this.state = {
       page: 0,
-      selectedDays: []
+      selectedDays: [],
+      data: {}
     }
+  }
+
+  componentDidMount() {
+    this.loadHabits();
+  }
+
+  loadHabits() {
+    axios.get('http://localhost:3000/api/today')
+    .then((habits) => {
+      console.log(habits.data);
+      this.setState({
+        page: this.state.page,
+        data: habits.data
+      });
+      console.log(this.state);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
   }
 
   handleChange(event) {
@@ -59,7 +79,8 @@ class App extends React.Component{
         this.setState({
           page: 1,
           selectedDays: []
-        })
+        });
+        this.loadHabits();
       })
       .catch((err) => {
         console.log(err);
@@ -107,7 +128,7 @@ class App extends React.Component{
     if (this.state.page == 0) {
       currentPage = <New handleChange={this.handleChange.bind(this)} selectedDays={this.state.selectedDays} handleSubmit={this.handleSubmit.bind(this)}/>;
     } else if (this.state.page == 1) {
-      currentPage = <Today/>;
+      currentPage = <Today data={this.state.data}/>;
     } else if (this.state.page == 2) {
       currentPage = <Week/>;
     } else if (this.state.page == 3){
